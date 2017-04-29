@@ -40,7 +40,9 @@ class TableView {
 	}
 
 	renderTableHeader() {
+		//clear header row
 		removeChildren(this.headerRowEl);
+		//get letters and build elements
 		getLetterRange('A', this.model.numCols)
 			.map(colLabel => createTH(colLabel))
 			.forEach(th => this.headerRowEl.appendChild(th));
@@ -59,7 +61,7 @@ class TableView {
 				const position = {col: col, row: row};
 				const value = this.model.getValue(position);
 				const td = createTD(value);
-				
+				td.id = col + ', ' + row;
 				if (this.isCurrentCell(col, row)) {
 					td.className = 'current-cell';
 				}
@@ -70,6 +72,25 @@ class TableView {
 		}
 		removeChildren(this.sheetBodyEl);
 		this.sheetBodyEl.appendChild(fragment);
+
+		let numbers = [];
+		for (let i = 0; document.getElementById(i + ', ' + 0) !== null; i++) {
+			let colTotal = 0;
+			for (let j = 0; document.getElementById(i + ', ' + j) !== null; j++) {
+				let num = document.getElementById(i + ', ' + j).textContent;
+				num = parseInt(num, 10);
+				if (!isNaN(num)) {
+					colTotal += num;
+				}
+			}
+			numbers.push(colTotal);
+		}
+		numbers
+			.map(colLabel => createTH(colLabel))
+			.forEach(th => {
+				th.className = 'sum-row';
+				this.sheetBodyEl.appendChild(th);
+			});
 	}
 
 	attachEventHandlers() {

@@ -80,6 +80,20 @@ describe('table-view', () => {
 			const trs = document.querySelectorAll('TBODY TR');
 			expect(trs[1].cells[2].textContent).toBe('123');
 		});
+
+		it('adds total number of cols to bottom of body', () => {
+
+			const model = new TableModel(3, 3);
+			const view = new TableView(model);
+			model.setValue({col: 1, row: 1}, '823');
+			model.setValue({col: 2, row: 1}, '123');
+			model.setValue({col: 2, row: 2}, '456');
+			view.init();
+
+			const ths = document.querySelectorAll('TBODY TH');
+			let labelTexts = Array.from(ths).map(el => el.textContent);
+			expect(labelTexts).toEqual(['', '823', '579']); 
+		});
 	});
 
 	describe('table header', () => {
