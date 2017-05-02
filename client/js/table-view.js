@@ -55,13 +55,13 @@ class TableView {
 
 	renderTableBody() {
 		const fragment = document.createDocumentFragment();
-		for(let row = 0; row < this.model.numRows; row++) {
+		for (let row = 0; row < this.model.numRows; row++) {
 			const tr = createTR();
 			for (let col = 0; col < this.model.numCols; col++) {
 				const position = {col: col, row: row};
 				const value = this.model.getValue(position);
 				const td = createTD(value);
-				td.id = col + ', ' + row;
+				td.id = `${col}, ${row}`;
 				if (this.isCurrentCell(col, row)) {
 					td.className = 'current-cell';
 				}
@@ -73,19 +73,25 @@ class TableView {
 		removeChildren(this.sheetBodyEl);
 		this.sheetBodyEl.appendChild(fragment);
 
-		let numbers = [];
-		for (let i = 0; document.getElementById(i + ', ' + 0) !== null; i++) {
+		let colTotals = [];
+		for (let i = 0; document.getElementById(`${i}, 0`) !== null; i++) {
 			let colTotal = 0;
-			for (let j = 0; document.getElementById(i + ', ' + j) !== null; j++) {
-				let num = document.getElementById(i + ', ' + j).textContent;
+			let numbersInCol = false;
+			for (let j = 0; document.getElementById(`${i}, ${j}`) !== null; j++) {
+				let num = document.getElementById(`${i}, ${j}`).textContent;
 				num = parseInt(num, 10);
 				if (!isNaN(num)) {
 					colTotal += num;
+					numbersInCol = true;
 				}
 			}
-			numbers.push(colTotal);
+			if (numbersInCol && colTotal === 0) {
+				colTotals.push('0');
+			} else {
+				colTotals.push(colTotal);
+			}
 		}
-		numbers
+		colTotals
 			.map(colLabel => createTH(colLabel))
 			.forEach(th => {
 				th.className = 'sum-row';

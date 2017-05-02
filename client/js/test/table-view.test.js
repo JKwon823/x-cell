@@ -81,7 +81,7 @@ describe('table-view', () => {
 			expect(trs[1].cells[2].textContent).toBe('123');
 		});
 
-		it('adds total number of cols to bottom of body', () => {
+		it('adds total of number inputs in each col to sum-row', () => {
 
 			const model = new TableModel(3, 3);
 			const view = new TableView(model);
@@ -93,6 +93,48 @@ describe('table-view', () => {
 			const ths = document.querySelectorAll('TBODY TH');
 			let labelTexts = Array.from(ths).map(el => el.textContent);
 			expect(labelTexts).toEqual(['', '823', '579']); 
+		});
+
+		it('ignores inputs that are not numbers', () => {
+
+			const model = new TableModel(3, 3);
+			const view = new TableView(model);
+			model.setValue({col: 1, row: 1}, 'ABC');
+			model.setValue({col: 2, row: 1}, 'XYZ');
+			model.setValue({col: 2, row: 2}, '123');
+			view.init();
+
+			const ths = document.querySelectorAll('TBODY TH');
+			let labelTexts = Array.from(ths).map(el => el.textContent);
+			expect(labelTexts).toEqual(['', '', '123']); 
+		});
+
+		it('adds negative numbers to sum-row', () => {
+
+			const model = new TableModel(3, 3);
+			const view = new TableView(model);
+			model.setValue({col: 1, row: 1}, '-7');
+			model.setValue({col: 2, row: 1}, '-1');
+			model.setValue({col: 2, row: 2}, '-4');
+			view.init();
+
+			const ths = document.querySelectorAll('TBODY TH');
+			let labelTexts = Array.from(ths).map(el => el.textContent);
+			expect(labelTexts).toEqual(['', '-7', '-5']); 
+		});
+
+		it('adds zero to sum-row', () => {
+
+			const model = new TableModel(3, 3);
+			const view = new TableView(model);
+			model.setValue({col: 1, row: 1}, '0');
+			model.setValue({col: 2, row: 1}, '-2');
+			model.setValue({col: 2, row: 2}, '2');
+			view.init();
+
+			const ths = document.querySelectorAll('TBODY TH');
+			let labelTexts = Array.from(ths).map(el => el.textContent);
+			expect(labelTexts).toEqual(['', '0', '0']); 
 		});
 	});
 
