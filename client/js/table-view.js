@@ -37,10 +37,10 @@ class TableView {
   renderTable() {
     this.renderTableHeader();
     this.renderTableBody();
+    this.renderSumRow();
   }
 
   renderTableHeader() {
-
     removeChildren(this.headerRowEl);
     getLetterRange('A', this.model.numCols)
       .map(colLabel => createTH(colLabel))
@@ -71,13 +71,24 @@ class TableView {
     }
     removeChildren(this.sheetBodyEl);
     this.sheetBodyEl.appendChild(fragment);
+  }
 
+  renderSumRow() {
+    this.calculateColTotals()
+      .map(colLabel => createTH(colLabel))
+      .forEach(th => {
+        th.className = 'sum-row';
+        this.sheetBodyEl.appendChild(th);
+      });
+  }
+
+  calculateColTotals() {
     let colTotals = [];
-    for (let i = 0; document.getElementById(`${i}, 0`) !== null; i++) {
+    for (let col = 0; col < this.model.numCols; col++) {
       let colTotal = 0;
       let numbersInCol = false;
-      for (let j = 0; document.getElementById(`${i}, ${j}`) !== null; j++) {
-        let num = document.getElementById(`${i}, ${j}`).textContent;
+      for (let row = 0; row < this.model.numRows; row++) {
+        let num = document.getElementById(`${col}, ${row}`).textContent;
         num = parseInt(num, 10);
         if (!isNaN(num)) {
           colTotal += num;
@@ -90,13 +101,9 @@ class TableView {
         colTotals.push(colTotal);
       }
     }
-    colTotals
-      .map(colLabel => createTH(colLabel))
-      .forEach(th => {
-        th.className = 'sum-row';
-        this.sheetBodyEl.appendChild(th);
-      });
+    return colTotals;
   }
+  
 
   attachEventHandlers() {
     this.sheetBodyEl.addEventListener('click', this.handleSheetClick.bind(this));
@@ -107,6 +114,7 @@ class TableView {
     const value = this.formulaBarEl.value;
     this.model.setValue(this.currentCellLocation, value);
     this.renderTableBody();
+    this.renderSumRow();
   }
 
   handleSheetClick(evt) {
@@ -115,6 +123,7 @@ class TableView {
 
     this.currentCellLocation = { col: col, row: row };
     this.renderTableBody();
+    this.renderSumRow();
     this.renderFormulaBar();
   }
 }
