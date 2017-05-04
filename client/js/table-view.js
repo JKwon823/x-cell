@@ -37,7 +37,6 @@ class TableView {
   renderTable() {
     this.renderTableHeader();
     this.renderTableBody();
-    this.renderSumRow();
   }
 
   renderTableHeader() {
@@ -71,6 +70,7 @@ class TableView {
     }
     removeChildren(this.sheetBodyEl);
     this.sheetBodyEl.appendChild(fragment);
+    this.renderSumRow();
   }
 
   renderSumRow() {
@@ -114,7 +114,6 @@ class TableView {
     const value = this.formulaBarEl.value;
     this.model.setValue(this.currentCellLocation, value);
     this.renderTableBody();
-    this.renderSumRow();
   }
 
   handleSheetClick(evt) {
@@ -123,7 +122,6 @@ class TableView {
 
     this.currentCellLocation = { col: col, row: row };
     this.renderTableBody();
-    this.renderSumRow();
     this.renderFormulaBar();
   }
 }
