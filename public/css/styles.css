@@ -13,3 +13,9 @@ td {
 .current-cell {
 	background-color: pink;
 }
+
+.sum-row {
+	background-color: #49fb35;
+	font-weight: bold;
+	text-align: left;
+}
